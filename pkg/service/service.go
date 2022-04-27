@@ -1,8 +1,14 @@
 package service
 
-import "restApiGo/pkg/repository"
+import (
+	socialApp "restApiGo"
+	"restApiGo/pkg/repository"
+)
 
 type Authorization interface {
+	CreateUser(user socialApp.User) (int, error)
+	GenerateToken(username, password string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
 type TodoList interface {
@@ -18,5 +24,7 @@ type Service struct {
 }
 
 func NewService(repos *repository.Repository) *Service {
-	return &Service{}
+	return &Service{
+		Authorization: NewAuthService(repos.Authorization),
+	}
 }
